@@ -1,4 +1,4 @@
-NotesToHz
+NotesTo(Hz||GrubTune)
 =========
 
 Program that translate notes to Hz or to GrubTune
