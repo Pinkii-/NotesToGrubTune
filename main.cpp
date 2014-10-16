@@ -7,7 +7,7 @@
 
 namespace Absolute {
   enum NOTES {
-    C,Cs,D,Eb,E,F,Fs,G,Gs,A,Bb,B
+    C,Cs,D,Eb,E,F,Fs,G,Gs,A,Bb,B // Totally usefull
   };
 };
 
@@ -21,7 +21,7 @@ struct Note {
   int scale;
   std::string note;
   Note(std::string n) {
-    scale =   n[0]-'0';
+    scale = n[0]-'0';
     n.erase(n.begin());
     note = n;
   }
@@ -30,25 +30,16 @@ struct Note {
 bool grub = false;
 std::vector<std::vector<int> > notas;  
 
-void write(std::vector<std::vector<int> > &v) {
-  for (int i = 0; i < v.size(); ++i) {
-    std::cout << i << std::endl;
-    for (int j = 0; j < v[i].size(); ++j) std::cout << v[i][j] << " ";
-    std::cout << std::endl;
-  }
-}
-
 void init() {
   int i = 0;
   int j = 1;
-  float next = 0;
-  float anterior = 16.35;
+  float next;
+  float first = 16.35;
   notas.push_back(std::vector<int>());
-  notas[0].push_back(anterior);
+  notas[0].push_back(first);
   while (next <= 20000) {
-    next = anterior*pow(2.f,(i*12+j)/12.f);
+    next = first*pow(2.f,(i*12+j)/12.f);
     notas[i].push_back(roundf(next));
-    //anterior = next;
     if (++j > 12) { j = 0; ++i; notas.push_back(std::vector<int>());}  
   }
   if (notas[notas.size()-1].size() != 12) notas.erase(notas.end()-1);
@@ -84,10 +75,7 @@ std::vector<int> readNotes () {
     if (s == ",") aux.push_back(0);
     else {
         Note n(s);
-        if (n.scale > 8) { 
-        std::cout << "BROKEN SCALE ON " << s << std::endl; 
-        exit(1); // son como cervatillos heridos como yo
-        }
+        if (n.scale > 8){std::cout<<"BROKEN SCALE ON "<<s<<std::endl;exit(1);}// son como cervatillos heridos como yo
         n.note = toStdNote(n.note);
         aux.push_back(translate(n));
     }
@@ -120,10 +108,7 @@ int main (int argc, char* argv[]) {
   init();
   float tempo;
   std::vector<int> salida;
-  if (argc == 2 and (strcmp(argv[1],"-h") == 0 or strcmp(argv[1],"--help") == 0)) {
-    std::cout << "The Readme is your friend" << std::endl;
-    exit(1);
-  }
+  if (argc == 2 and (strcmp(argv[1],"-h") == 0 or strcmp(argv[1],"--help") == 0)) {std::cout << "The Readme is your friend" << std::endl;exit(1);  }
   if (argc == 2 and strcmp(argv[1],"--grubTune") == 0) grub = true;
   if (grub) std::cin >> tempo;
   salida = readNotes();
